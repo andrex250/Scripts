@@ -1,0 +1,5 @@
+$events = Get-WinEvent -LogName security -MaxEvents 1000|where {$_.Id -eq 4624}| Select-Object -Property TimeCreated,Id, `
+@{Name='AccountName';Expression={$_.Properties[5].Value}}, `
+@{Name='AccountDomain';Expression={$_.Properties[6].Value}}
+$events|group AccountName|foreach{
+$_.group|sort TimeCreated -Descending|select -First 1} | convertto-html | out-file -filepath c:\users\tracr\desktop\logons.html
